@@ -6,7 +6,17 @@ export class RegistryController {
   private registryRepository = getRepository(Registry);
 
   async all(request: Request, response: Response, next: NextFunction) {
-    return this.registryRepository.find();
+    return (await this.registryRepository.find())
+      .map((registry) => {
+        return {
+          id: registry.id,
+          scaleName: registry.scaleName,
+          weight: registry.weight.toString(),
+          createdAt: registry.createdAt,
+          userName: registry.userName,
+        };
+      })
+      .reverse();
   }
 
   async one(request: Request, response: Response, next: NextFunction) {
@@ -14,10 +24,16 @@ export class RegistryController {
   }
 
   async save(request: Request, response: Response, next: NextFunction) {
-    console.log("====================================");
-    console.log(request.body);
-    console.log("====================================");
-    return this.registryRepository.save(request.body);
+    // console.log("====================================");
+    delete request.body.id;
+    // console.log(request.body);
+    // console.log("====================================");
+    try {
+      await this.registryRepository.save(request.body);
+      response.status(200).json({ message: "Peso capturado con exito" });
+    } catch (error) {
+      response.status(400).json({ errorMessage: "Error al capturar peso" });
+    }
   }
 
   async remove(request: Request, response: Response, next: NextFunction) {

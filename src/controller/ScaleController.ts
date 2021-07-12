@@ -14,11 +14,22 @@ export class ScaleController {
   }
 
   async save(request: Request, response: Response, next: NextFunction) {
-    return this.scaleRepository.save(request.body);
+    try {
+      let newScale: Scale = await this.scaleRepository.save(request.body);
+      return response.status(200).json(newScale);
+    } catch (error) {
+      return response.status(400).json({ errorMessage: error });
+    }
   }
 
   async remove(request: Request, response: Response, next: NextFunction) {
     let scaleToRemove = await this.scaleRepository.findOne(request.params.id);
-    await this.scaleRepository.remove(scaleToRemove);
+    if (scaleToRemove) {
+      let res = await this.scaleRepository.remove(scaleToRemove);
+      console.log(`res delete`, res);
+      response.status(200).json({ message: "Balanza eliminada con exito" });
+    } else {
+      response.status(400).json({ errorMessage: "Error al eliminar balanza" });
+    }
   }
 }

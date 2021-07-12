@@ -1,3 +1,3 @@
 import { ScaleType } from "../types/ScaleType";
 
-export var scaleList: ScaleType[] = [];
+export var scaleList = [];
