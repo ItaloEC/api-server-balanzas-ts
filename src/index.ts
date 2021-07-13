@@ -36,7 +36,7 @@ createConnection()
 
         // console.log(`scaleListFromDB`, scaleListFromDB);
         // console.log(`scaleList`, scaleList);
-        console.log(`values`, values);
+        // console.log(`values`, values);
 
         io.emit("weight-server-for-front", values);
       })();
